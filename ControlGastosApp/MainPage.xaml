@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:ControlGastosApp.ViewModels"
+             x:Class="ControlGastosApp.MainPage"
+             BackgroundColor="#121212">
+
+    <ContentPage.BindingContext>
+        <vm:MainViewModel />
+    </ContentPage.BindingContext>
+
+    <Grid RowDefinitions="Auto, *">
+
+        <Frame Grid.Row="0" BackgroundColor="#1E1E1E" Margin="20" CornerRadius="15" HasShadow="True">
+            <Frame.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding ActualizarCapitalCommand}" />
+            </Frame.GestureRecognizers>
+
+            <VerticalStackLayout Spacing="5" HorizontalOptions="Center">
+                <Label Text="Capital Total" TextColor="Gray" HorizontalOptions="Center"/>
+                <Label Text="{Binding CapitalTotal, StringFormat='${0:F2}'}" 
+                       TextColor="White" FontSize="32" FontAttributes="Bold" />
+                <Label Text="(Toca para modificar)" TextColor="#512BD4" FontSize="10" HorizontalOptions="Center"/>
+            </VerticalStackLayout>
+        </Frame>
+
+        <CarouselView Grid.Row="1">
+            <CarouselView.ItemsSource>
+                <x:Array Type="{x:Type x:String}">
+                    <x:String>Gastos</x:String>
+                    <x:String>Ingresos</x:String>
+                </x:Array>
+            </CarouselView.ItemsSource>
+
+            <CarouselView.ItemTemplate>
+                <DataTemplate>
+                    <Grid RowDefinitions="Auto, *">
+                        <Label Text="{Binding .}" TextColor="White" FontSize="20" Margin="25,0" FontAttributes="Bold"/>
+
+                        <ListView Grid.Row="1" Margin="10" BackgroundColor="Transparent">
+                        </ListView>
+
+                        <Button Grid.Row="1" Text="+" VerticalOptions="End" HorizontalOptions="End" 
+                                Margin="20" CornerRadius="30" WidthRequest="60" HeightRequest="60"
+                                BackgroundColor="#512BD4" FontSize="24" />
+                    </Grid>
+                </DataTemplate>
+            </CarouselView.ItemTemplate>
+        </CarouselView>
+    </Grid>
+</ContentPage>

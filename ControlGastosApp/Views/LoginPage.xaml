@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ControlGastosApp.Views.LoginPage"
+             BackgroundColor="#121212">
+
+    <VerticalStackLayout VerticalOptions="Center" Spacing="25" Padding="30">
+
+        <Image Source="dotnet_bot.png" HeightRequest="100" HorizontalOptions="Center" />
+
+        <Label Text="Bienvenido de nuevo" 
+               TextColor="White" 
+               FontSize="24" 
+               HorizontalOptions="Center" />
+
+        <Entry x:Name="PinEntry"
+               Placeholder="Ingresa tu PIN"
+               PlaceholderColor="Gray"
+               TextColor="White"
+               HorizontalTextAlignment="Center"
+               Keyboard="Numeric"
+               IsPassword="True"
+               MaxLength="4"
+               FontSize="20" />
+
+        <Button Text="Entrar"
+                Clicked="OnLoginClicked"
+                BackgroundColor="#512BD4"
+                TextColor="White"
+                CornerRadius="10" />
+
+    </VerticalStackLayout>
+</ContentPage>
