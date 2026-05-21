@@ -93,7 +93,7 @@ namespace ControlGastosApp
 
                 // 3. Abrimos la nueva página que creaste pasándole como dato de viaje la pestaña actual
                 // Usamos PushModalAsync para que aparezca deslizándose de abajo hacia arriba de forma muy elegante
-                await Navigation.PushModalAsync(new NuevoMovimientoPage());
+                await Navigation.PushModalAsync(new NuevoMovimientoPage(pestañaActual));
             }
             catch (System.Exception ex)
             {

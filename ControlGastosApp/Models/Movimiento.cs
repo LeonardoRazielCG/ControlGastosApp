@@ -7,7 +7,7 @@ namespace ControlGastosApp.Models
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
 
-        public string Descripcion { get; set; }
+        public string Concepto { get; set; }
 
         public double Monto { get; set; }
 
