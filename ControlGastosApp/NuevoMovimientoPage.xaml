@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ControlGastosApp.NuevoMovimientoPage"
+             Title="Nuevo Registro"
+             BackgroundColor="#121212">
+    <ScrollView>
+        <VerticalStackLayout Padding="25" Spacing="20">
+
+            <Label Text="Agregar Movimiento" 
+                   TextColor="White" 
+                   FontSize="24" 
+                   FontAttributes="Bold" 
+                   HorizontalOptions="Start" 
+                   Margin="0,10,0,10"/>
+
+            <Frame BackgroundColor="#1E1E1E" BorderColor="Transparent" CornerRadius="12" Padding="15,10">
+                <VerticalStackLayout Spacing="5">
+                    <Label Text="Monto ($)" TextColor="Gray" FontSize="12" FontAttributes="Bold"/>
+                    <Entry x:Name="txtMonto" 
+                           TextColor="White" 
+                           FontSize="28" 
+                           FontAttributes="Bold"
+                           Placeholder="0.00" 
+                           PlaceholderColor="#555555"
+                           Keyboard="Numeric"/>
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame BackgroundColor="#1E1E1E" BorderColor="Transparent" CornerRadius="12" Padding="15,10">
+                <VerticalStackLayout Spacing="5">
+                    <Label Text="Concepto o Descripción" TextColor="Gray" FontSize="12" FontAttributes="Bold"/>
+                    <Entry x:Name="txtConcepto" 
+                           TextColor="White" 
+                           FontSize="16" 
+                           Placeholder="Ej. Despensa, Pago de nómina, Gasolina" 
+                           PlaceholderColor="#555555"
+                           Keyboard="Text"
+                           MaxLength="50"/>
+                </VerticalStackLayout>
+            </Frame>
+
+            <Grid ColumnDefinitions="*, *" ColumnSpacing="15" Margin="0,20,0,0">
+
+                <Button Grid.Column="0" 
+                        Text="Cancelar" 
+                        BackgroundColor="#2C2C2C" 
+                        TextColor="White" 
+                        FontAttributes="Bold"
+                        CornerRadius="25" 
+                        HeightRequest="50"
+                        Clicked="OnCancelarClicked"/>
+
+                <Button Grid.Column="1" 
+                        Text="Guardar" 
+                        BackgroundColor="#512BD4" TextColor="White" 
+                        FontAttributes="Bold"
+                        CornerRadius="25" 
+                        HeightRequest="50"
+                        Clicked="OnGuardarClicked"/>
+            </Grid>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

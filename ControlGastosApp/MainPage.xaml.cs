@@ -76,5 +76,29 @@ namespace ControlGastosApp
                 System.Diagnostics.Debug.WriteLine($"Error en el prompt de capital: {ex.Message}");
             }
         }
+
+        private async void OnAgregarMovimientoClicked(object sender, System.EventArgs e)
+        {
+            try
+            {
+                // 1. Detectamos qué texto tiene la pestaña actual del carrusel ("Gastos" o "Ingresos")
+                // carouselViews es el x:Name que le pusimos al Carrusel en el XAML
+                string pestañaActual = carouselViews.CurrentItem as string;
+
+                // 2. Si por alguna razón está vacío, por defecto asumimos que son "Gastos"
+                if (string.IsNullOrEmpty(pestañaActual))
+                {
+                    pestañaActual = "Gastos";
+                }
+
+                // 3. Abrimos la nueva página que creaste pasándole como dato de viaje la pestaña actual
+                // Usamos PushModalAsync para que aparezca deslizándose de abajo hacia arriba de forma muy elegante
+                await Navigation.PushModalAsync(new NuevoMovimientoPage());
+            }
+            catch (System.Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error al abrir la pantalla de nuevo movimiento: {ex.Message}");
+            }
+        }
     }
 }
