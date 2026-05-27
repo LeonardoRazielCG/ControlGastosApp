@@ -17,7 +17,7 @@ namespace ControlGastosApp
             this.BindingContext = _viewModel;
         }
 
-        // Se ejecuta automáticamente cada vez que la pantalla vuelve a estar al frente
+        // 2. Refresco forzado al volver a la pantalla principal
         protected override async void OnAppearing()
         {
             base.OnAppearing();
@@ -26,8 +26,16 @@ namespace ControlGastosApp
             {
                 try
                 {
-                    // Forzamos una recarga limpia desde la base de datos de SQLite
+                    // 1. Esperamos a que SQLite termine de cargar los datos en memoria
                     await _viewModel.CargarDatosAsync();
+
+                    // 2. Forzamos el refresco visual en el hilo de la interfaz de usuario
+                    MainThread.BeginInvokeOnMainThread(() =>
+                    {
+                        var fuenteOriginal = carouselViews.ItemsSource;
+                        carouselViews.ItemsSource = null;
+                        carouselViews.ItemsSource = fuenteOriginal;
+                    });
                 }
                 catch (System.Exception ex)
                 {
@@ -77,27 +85,20 @@ namespace ControlGastosApp
             }
         }
 
+        // 1. Detección infalible de pestaña al pulsar el botón flotante
         private async void OnAgregarMovimientoClicked(object sender, System.EventArgs e)
         {
             try
             {
-                // 1. Detectamos qué texto tiene la pestaña actual del carrusel ("Gastos" o "Ingresos")
-                // carouselViews es el x:Name que le pusimos al Carrusel en el XAML
-                string pestañaActual = carouselViews.CurrentItem as string;
+                // Obtenemos la sección actual del carrusel
+                var seccionActual = carouselViews.CurrentItem as ControlGastosApp.ViewModels.SeccionMovimientos;
+                string nombrePestaña = seccionActual?.Titulo ?? "Gastos";
 
-                // 2. Si por alguna razón está vacío, por defecto asumimos que son "Gastos"
-                if (string.IsNullOrEmpty(pestañaActual))
-                {
-                    pestañaActual = "Gastos";
-                }
-
-                // 3. Abrimos la nueva página que creaste pasándole como dato de viaje la pestaña actual
-                // Usamos PushModalAsync para que aparezca deslizándose de abajo hacia arriba de forma muy elegante
-                await Navigation.PushModalAsync(new NuevoMovimientoPage(pestañaActual));
+                await Navigation.PushModalAsync(new NuevoMovimientoPage(nombrePestaña));
             }
             catch (System.Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Error al abrir la pantalla de nuevo movimiento: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine(ex.Message);
             }
         }
     }

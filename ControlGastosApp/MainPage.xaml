@@ -29,31 +29,40 @@
             </VerticalStackLayout>
         </Frame>
 
-        <CarouselView Grid.Row="1" 
-                      x:Name="carouselViews" 
-                      Margin="0,10,0,0">
-
-            <CarouselView.ItemsSource>
-                <x:Array Type="{x:Type x:String}">
-                    <x:String>Gastos</x:String>
-                    <x:String>Ingresos</x:String>
-                </x:Array>
-            </CarouselView.ItemsSource>
-
+        <CarouselView Grid.Row="1" x:Name="carouselViews" ItemsSource="{Binding Secciones}" Margin="0,10,0,0">
             <CarouselView.ItemTemplate>
                 <DataTemplate>
                     <Grid RowDefinitions="Auto, *">
-                        <Label Text="{Binding .}" TextColor="White" FontSize="20" Margin="25,0" FontAttributes="Bold"/>
+                        <Label Text="{Binding Titulo}" TextColor="White" FontSize="20" Margin="25,0" FontAttributes="Bold"/>
 
-                        <ListView Grid.Row="1" Margin="10" BackgroundColor="Transparent">
+                        <ListView Grid.Row="1" 
+                          Margin="10" 
+                          BackgroundColor="Transparent"
+                          SelectionMode="None"
+                          ItemsSource="{Binding Items}">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <ViewCell>
+                                        <Grid ColumnDefinitions="*, Auto" Padding="15,10">
+                                            <Label Grid.Column="0" Text="{Binding Concepto}" TextColor="White" FontSize="16" VerticalOptions="Center"/>
+
+                                            <Label Grid.Column="1" Text="{Binding Monto, StringFormat='${0:F2}'}" FontSize="16" FontAttributes="Bold" VerticalOptions="Center">
+                                                <Label.Triggers>
+                                                    <DataTrigger TargetType="Label" Binding="{Binding EsIngreso}" Value="True">
+                                                        <Setter Property="TextColor" Value="#4CAF50" />
+                                                    </DataTrigger>
+                                                    <DataTrigger TargetType="Label" Binding="{Binding EsIngreso}" Value="False">
+                                                        <Setter Property="TextColor" Value="#FF5252" />
+                                                    </DataTrigger>
+                                                </Label.Triggers>
+                                            </Label>
+                                        </Grid>
+                                    </ViewCell>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
                         </ListView>
 
-                        <Button Grid.Row="1" Text="+" 
-                                VerticalOptions="End" HorizontalOptions="End" 
-                                Margin="20" CornerRadius="30" 
-                                WidthRequest="60" HeightRequest="60"
-                                BackgroundColor="#512BD4" FontSize="24" 
-                                Clicked="OnAgregarMovimientoClicked"/>
+                        <Button Grid.Row="1" Text="+" VerticalOptions="End" HorizontalOptions="End" Margin="20" CornerRadius="30" WidthRequest="60" HeightRequest="60" BackgroundColor="#512BD4" FontSize="24" Clicked="OnAgregarMovimientoClicked"/>
                     </Grid>
                 </DataTemplate>
             </CarouselView.ItemTemplate>
