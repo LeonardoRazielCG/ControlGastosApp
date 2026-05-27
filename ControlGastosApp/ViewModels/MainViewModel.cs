@@ -79,6 +79,44 @@ namespace ControlGastosApp.ViewModels
             catch (Exception ex) { System.Diagnostics.Debug.WriteLine(ex.Message); }
         }
 
+        public async Task EliminarMovimientoAsync(Movimiento movimiento)
+        {
+            if (movimiento == null) return;
+
+            try
+            {
+                // 1. lo borramos fisicamente de la base de datos SQL
+                await _dbService.DeleteMovimientoAsync(movimiento);
+
+                // 2. Ajustamos el capital total de la inversa del movimiento eliminado
+                if (movimiento.EsIngreso)
+                {
+                    CapitalTotal -= movimiento.Monto;// si se elimina el ingreso el capital se deminuye
+                }
+                else
+                {
+                    CapitalTotal += movimiento.Monto; // si el gasto se elimina aumenta la capital
+                }
+                // 3. Guardamos el nuevo impacto en la capital en la configuración de la BD
+                var config = await _dbService.GetConfigAsync() ?? new ConfigUsuario();
+                config.CapitalTotal = CapitalTotal;
+                await _dbService.UpdateConfigAsync(config);
+
+                // 4. Lo removemos de la coleccion visual en el hilo de la UI
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    if (movimiento.EsIngreso)
+                        Ingresos.Remove(movimiento);
+                    else
+                        Gastos.Remove(movimiento);
+                });
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error al eliminar el movimiento: {ex.Message}");
+            }
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {

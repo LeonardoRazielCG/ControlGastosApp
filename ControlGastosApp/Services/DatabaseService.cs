@@ -47,7 +47,7 @@ namespace ControlGastosApp.Services
             await _database.UpdateAsync(config);
         }
 
-        // Método para obtener movimientos filtrados por tipo (Ingreso o Gasto)
+        // Método para obtener movimientos filtrados por tipo (Ingreso o Gasto)  -------------- ESTE METODO ES GENERICO ------------
         public async Task<List<Movimiento>> GetMovimientosAsync(bool esIngreso)
         {
             await Init(); // Asegura que la base de datos esté lista
@@ -64,11 +64,11 @@ namespace ControlGastosApp.Services
             await _database.InsertAsync(item);
         }
 
-        // Método para borrar un movimiento
-        public async Task DeleteMovimientoAsync(Movimiento item)
+        // Método para borrar un movimiento --------- ESTE METODO ES ASINCRONICO -------------
+        public async Task<int> DeleteMovimientoAsync(Movimiento movimiento)
         {
-            await Init();
-            await _database.DeleteAsync(item);
+            await Init(); // Asegura que la conexión este abierta
+            return await _database.DeleteAsync(movimiento);
         }
     }
 }
