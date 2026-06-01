@@ -137,5 +137,12 @@ namespace ControlGastosApp.Services
                                   .OrderByDescending(h => h.FechaPago)
                                   .ToListAsync();
         }
+
+        public Task<int> DeleteServicioAsync(ServicioFijo servicio)
+        {
+            // Utiliza la instancia de tu conexión SQLite Async (comúnmente llamada _database o Connection)
+            return _database.DeleteAsync(servicio);
+        }
+
     }
 }

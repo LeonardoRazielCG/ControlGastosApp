@@ -15,6 +15,13 @@
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
+
+                        <ViewCell.ContextActions>
+                            <MenuItem Text="Eliminar"
+                                      IsDestructive="True"
+                                      Clicked="OnEliminarServicioClicked"
+                                      CommandParameter="{Binding .}" />
+                        </ViewCell.ContextActions>
                         <Border BackgroundColor="#1E1E1E" StrokeThickness="0" Margin="0,4" Padding="15,10">
                             <Grid ColumnDefinitions="*, Auto, Auto" RowDefinitions="Auto, Auto" ColumnSpacing="10">
 

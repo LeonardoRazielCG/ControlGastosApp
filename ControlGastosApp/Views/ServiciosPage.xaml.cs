@@ -124,5 +124,45 @@ namespace ControlGastosApp.Views
 
             await DisplayAlert($"Historial de {servicio.Nombre}", mensaje, "Cerrar");
         }
+
+        private async void OnEliminarServicioClicked(object sender, EventArgs e)
+        {
+            try
+            {
+                var mi = sender as MenuItem;
+
+                // Corregido: Usamos tu clase real 'ServicioFijo'
+                var servicioAEliminar = mi?.CommandParameter as ServicioFijo;
+
+                if (servicioAEliminar != null)
+                {
+                    bool confirmar = await DisplayAlert("¿Eliminar servicio?",
+                        $"¿Estás seguro de que quieres quitar \"{servicioAEliminar.Nombre}\" de tus servicios fijos?",
+                        "Sí, eliminar", "Cancelar");
+
+                    if (confirmar)
+                    {
+                        // 1. Borramos permanentemente de la base de datos SQLite
+                        await _databaseService.DeleteServicioAsync(servicioAEliminar);
+
+                        // 2. Quitamos el elemento de la lista visual en caliente
+                        if (listaServicios.ItemsSource is System.Collections.IList listaLocal)
+                        {
+                            listaLocal.Remove(servicioAEliminar);
+
+                            // TRUCO DE ORO: Forzamos al ListView a redibujarse en pantalla de inmediato
+                            listaServicios.ItemsSource = null;
+                            listaServicios.ItemsSource = listaLocal;
+                        }
+
+                        await DisplayAlert("Eliminado", "El servicio ha sido eliminado correctamente.", "OK");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Error", $"No se pudo eliminar el servicio: {ex.Message}", "OK");
+            }
+        }
     }
 }
