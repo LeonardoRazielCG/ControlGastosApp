@@ -24,6 +24,9 @@ namespace ControlGastosApp
 
         private async void OnCancelarClicked(object sender, EventArgs e)
         {
+            // Forzamos a ocultar el teclado si el usuario cancela la operación
+            OcultarTeclado();
+
             await Navigation.PopModalAsync();
         }
 
@@ -46,11 +49,14 @@ namespace ControlGastosApp
                     return;
                 }
 
+                // Forzamos a ocultar el teclado aquí para que Android lo guarde antes de cerrar la animación modal
+                OcultarTeclado();
+
                 // 3. Creamos el nuevo objeto Movimiento con los datos capturados en la interfaz
                 var nuevoMovimiento = new Movimiento
                 {
-                    Monto = monto,
-                    Concepto = txtConcepto.Text.Trim(),
+                    Monto = double.Parse(txtMonto.Text),
+                    Concepto = txtConcepto.Text,
                     EsIngreso = _esIngreso,
                     Fecha = DateTime.Now // Registra la fecha y hora exacta actual de San Luis Potosí
                 };
@@ -80,6 +86,18 @@ namespace ControlGastosApp
             {
                 await DisplayAlert("Error", $"No se pudo guardar el registro: {ex.Message}", "Aceptar");
             }
+        }
+
+        /// <summary>
+        /// Quita el foco de los cuadros de texto, obligando al sistema operativo Android a ocultar el teclado virtual.
+        /// </summary>
+        private void OcultarTeclado()
+        {
+            if (txtMonto != null && txtMonto.IsFocused)
+                txtMonto.Unfocus();
+
+            if (txtConcepto != null && txtConcepto.IsFocused)
+                txtConcepto.Unfocus();
         }
     }
 }

@@ -1,5 +1,9 @@
 ﻿using SQLite;
 using ControlGastosApp.Models;
+using System.IO;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using System;
 
 namespace ControlGastosApp.Services
 {
@@ -13,9 +17,13 @@ namespace ControlGastosApp.Services
             var dbPath = Path.Combine(FileSystem.AppDataDirectory, "Finanzas.db3");
             _database = new SQLiteAsyncConnection(dbPath);
 
-            // Creamos las tablas
+            // Creamos las tablas originales
             await _database.CreateTableAsync<ConfigUsuario>();
             await _database.CreateTableAsync<Movimiento>();
+
+            // NUEVAS TABLAS: Para los servicios predeterminados y su historial de consumo
+            await _database.CreateTableAsync<ServicioFijo>();
+            await _database.CreateTableAsync<HistorialServicio>();
 
             // Si es la primera vez, creamos un usuario inicial
             var user = await _database.Table<ConfigUsuario>().FirstOrDefaultAsync();
@@ -57,7 +65,7 @@ namespace ControlGastosApp.Services
                                   .ToListAsync();
         }
 
-        // Método para guardar un nuevo movimiento (lo usaremos en el siguiente paso)
+        // Método para guardar un nuevo movimiento
         public async Task SaveMovimientoAsync(Movimiento item)
         {
             await Init();
@@ -69,6 +77,65 @@ namespace ControlGastosApp.Services
         {
             await Init(); // Asegura que la conexión este abierta
             return await _database.DeleteAsync(movimiento);
+        }
+
+        // ===================================================================================
+        // NUEVOS MÉTODOS: CONTROL DE SERVICIOS FIJOS E HISTORIAL DE CONSUMO
+        // ===================================================================================
+
+        /// <summary>
+        /// Obtiene la lista completa de todos los servicios predeterminados por el usuario
+        /// </summary>
+        public async Task<List<ServicioFijo>> GetServiciosFijosAsync()
+        {
+            await Init();
+            return await _database.Table<ServicioFijo>().ToListAsync();
+        }
+
+        /// <summary>
+        /// Guarda un nuevo servicio o actualiza uno ya existente
+        /// </summary>
+        public async Task<int> SaveServicioFijoAsync(ServicioFijo servicio)
+        {
+            await Init();
+            if (servicio.Id != 0)
+            {
+                return await _database.UpdateAsync(servicio); // Si ya tiene Id, lo actualiza
+            }
+            else
+            {
+                return await _database.InsertAsync(servicio); // Si es nuevo, lo inserta
+            }
+        }
+
+        /// <summary>
+        /// Elimina de forma definitiva un servicio predeterminado
+        /// </summary>
+        public async Task<int> DeleteServicioFijoAsync(ServicioFijo servicio)
+        {
+            await Init();
+            return await _database.DeleteAsync(servicio);
+        }
+
+        /// <summary>
+        /// Registra un nuevo pago en el historial para llevar el control de consumo
+        /// </summary>
+        public async Task<int> SaveHistorialServicioAsync(HistorialServicio historial)
+        {
+            await Init();
+            return await _database.InsertAsync(historial);
+        }
+
+        /// <summary>
+        /// Trae todo el historial de pagos de un servicio en orden cronológico inverso (para las gráficas)
+        /// </summary>
+        public async Task<List<HistorialServicio>> GetHistorialPorServicioAsync(int servicioId)
+        {
+            await Init();
+            return await _database.Table<HistorialServicio>()
+                                  .Where(h => h.ServicioFijoId == servicioId)
+                                  .OrderByDescending(h => h.FechaPago)
+                                  .ToListAsync();
         }
     }
 }

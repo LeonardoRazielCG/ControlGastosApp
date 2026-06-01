@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="ControlGastosApp.Views.ServiciosPage"
+             Title="Servicios y Recibos"
+             BackgroundColor="#121212">
+
+    <Grid RowDefinitions="*, Auto" Padding="15">
+
+        <ListView Grid.Row="0"
+                  x:Name="listaServicios"
+                  BackgroundColor="Transparent"
+                  SelectionMode="None"
+                  HasUnevenRows="True">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <Border BackgroundColor="#1E1E1E" StrokeThickness="0" Margin="0,4" Padding="15,10">
+                            <Grid ColumnDefinitions="*, Auto, Auto" RowDefinitions="Auto, Auto" ColumnSpacing="10">
+
+                                <Label Grid.Column="0" Grid.Row="0" 
+                                       Text="{Binding Nombre}" 
+                                       TextColor="White" FontSize="16" FontAttributes="Bold"
+                                       VerticalOptions="Center"/>
+
+                                <Label Grid.Column="0" Grid.Row="1" 
+                                       TextColor="#888888" FontSize="12"
+                                       VerticalOptions="Center">
+                                    <Label.Text>
+                                        <MultiBinding StringFormat="Vence el día {0} | Est: ${1:F2}">
+                                            <Binding Path="DiaVencimiento" />
+                                            <Binding Path="MontoEstimado" />
+                                        </MultiBinding>
+                                    </Label.Text>
+                                </Label>
+
+                                <ImageButton Grid.Column="1" Grid.Row="0" Grid.RowSpan="2"
+                                             Source="clock.png"
+                                             BackgroundColor="Transparent"
+                                             HeightRequest="30" WidthRequest="30"
+                                             VerticalOptions="Center"
+                                             Clicked="OnVerHistorialClicked"
+                                             CommandParameter="{Binding .}"/>
+
+                                <CheckBox Grid.Column="2" Grid.Row="0" Grid.RowSpan="2"
+                                          Color="#512BD4"
+                                          VerticalOptions="Center"
+                                          CheckedChanged="OnPagarServicioCheckedChanged"
+                                          BindingContext="{Binding .}"/>
+                            </Grid>
+                        </Border>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <Button Grid.Row="1"
+                Text="Agregar Servicio Fijo"
+                BackgroundColor="#512BD4"
+                TextColor="White"
+                FontAttributes="Bold"
+                CornerRadius="10"
+                Margin="0,10,0,0"
+                Clicked="OnAgregarServicioClicked"/>
+    </Grid>
+</ContentPage>

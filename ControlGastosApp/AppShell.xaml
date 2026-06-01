@@ -7,9 +7,16 @@
     Shell.FlyoutBehavior="Disabled"
     Title="ControlGastosApp">
 
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate views:MainPage}"
-        Route="MainPage" />
+    <TabBar>
+
+        <Tab Title="Diario">
+            <ShellContent ContentTemplate="{DataTemplate views:MainPage}" Route="MainPage" />
+        </Tab>
+
+        <Tab Title="Servicios">
+            <ShellContent ContentTemplate="{DataTemplate views:ServiciosPage}" Route="ServiciosPage" />
+        </Tab>
+
+    </TabBar>
 
 </Shell>

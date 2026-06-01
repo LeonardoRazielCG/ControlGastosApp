@@ -30,7 +30,7 @@ public partial class LoginPage : ContentPage
         {
             // Si es correcto, navegamos al Dashboard (MainPage)
             // Por ahora usaremos App.Current.MainPage para cambiar la raíz
-            Application.Current.MainPage = new NavigationPage(new MainPage());
+            Application.Current.MainPage = new AppShell();
         }
         else
         {
