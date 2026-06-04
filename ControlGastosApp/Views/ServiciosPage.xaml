@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:models="clr-namespace:ControlGastosApp.Models"
              x:Class="ControlGastosApp.Views.ServiciosPage"
              Title="Servicios y Recibos"
              BackgroundColor="#121212">
@@ -15,14 +16,24 @@
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
-
                         <ViewCell.ContextActions>
                             <MenuItem Text="Eliminar"
                                       IsDestructive="True"
                                       Clicked="OnEliminarServicioClicked"
                                       CommandParameter="{Binding .}" />
                         </ViewCell.ContextActions>
-                        <Border BackgroundColor="#1E1E1E" StrokeThickness="0" Margin="0,4" Padding="15,10">
+
+                        <Border BackgroundColor="#1E1E1E" 
+                                StrokeThickness="0" 
+                                Margin="0,4" 
+                                Padding="15,10" 
+                                x:DataType="models:ServicioFijo">
+
+                            <Border.Triggers>
+                                <DataTrigger TargetType="Border" Binding="{Binding DebeMostrarAlerta}" Value="True">
+                                    <Setter Property="BackgroundColor" Value="#4A1515" />
+                                </DataTrigger>
+                            </Border.Triggers>
                             <Grid ColumnDefinitions="*, Auto, Auto" RowDefinitions="Auto, Auto" ColumnSpacing="10">
 
                                 <Label Grid.Column="0" Grid.Row="0" 
@@ -34,9 +45,9 @@
                                        TextColor="#888888" FontSize="12"
                                        VerticalOptions="Center">
                                     <Label.Text>
-                                        <MultiBinding StringFormat="Vence el día {0} | Est: ${1:F2}">
-                                            <Binding Path="DiaVencimiento" />
-                                            <Binding Path="MontoEstimado" />
+                                        <MultiBinding StringFormat="Prox. Pago: {0:dd/MM/yyyy} | Repite: {1}">
+                                            <Binding Path="FechaProximoPago" />
+                                            <Binding Path="Periodicidad" />
                                         </MultiBinding>
                                     </Label.Text>
                                 </Label>
